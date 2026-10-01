@@ -1,0 +1,453 @@
+<html lang="en" dir="ltr">
+
+<head>
+
+    <meta charset="UTF-8"></meta>
+
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"></meta>
+
+    <title>اختبار إلكتروني</title>
+
+    <style>
+
+        body { font-family: Arial, sans-serif; }
+
+        .hidden { display: none; }
+
+        #result { margin-top: 20px; }
+
+        #timer { font-size: 20px; color: red; font-weight: bold; } /* زيادة سمك الخط */
+
+        h2 { font-size: 22px; font-weight: bold; color: #000000; } /* تغيير اللون إلى الأسود وزيادة السُمك */
+
+        label { font-size: 18px; font-weight: bold; color: #333333; } /* زيادة سمك الخط وتحسين اللون */
+
+        #timer { font-size: 20px; color: red; }
+
+        h2 { font-size: 22px; }
+
+        label { font-size: 18px; }
+
+        .correct { font-weight: bold; color: red; }
+
+        /* CSS لتحريك الزر */
+
+        #next-button {
+
+            position: absolute; /* يسمح بتحديد الموقع */
+
+            left: 20px; /* المسافة من الجانب الأيسر */
+
+            bottom: 20px; /* المسافة من الأسفل */
+
+            padding: 10px 20px; /* لتعديل حجم الزر */
+
+        }
+
+        #popup {
+
+    position: fixed;
+
+    top: 30%;
+
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    background-color: #fff;
+
+    border: 1px solid #ccc;
+
+    padding: 20px;
+
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+    z-index: 1000;
+
+    text-align: center;
+
+    display: none;
+
+}
+
+#popup button {
+
+    margin-top: 10px;
+
+    padding: 5px 10px;
+
+    background-color: red;
+
+    color: white;
+
+    border: none;
+
+    cursor: pointer;
+
+}
+
+#popup button:hover {
+
+    background-color: darkred;
+
+}
+
+    </style>
+
+</head>
+
+<body>
+
+    <h2 class="header-one">
+
+        التدريب علي اختبارات الجهاز المركزى
+
+
+   
+
+    </div>
+<div id="login-container">
+
+    <label for="password">أدخل كلمة المرور:</label>
+
+    <input id="password" type="password" />
+
+    <br /><br />
+
+    <label for="duration">حدد مدة الاختبار (بالدقائق):</label>
+
+    <input id="duration" min="1" type="number" value="5" />
+<br /><br />
+    <label for="questionCount">حدد عدد الأسئلة:</label>
+    <input id="questionCount" min="1" max="55" type="number" value="20" />
+<br /><br />
+
+    <button onclick="checkPassword()">دخول</button>
+
+</div>
+
+<div class="hidden" id="quiz">
+
+    <div id="timer">5:00</div>
+
+    <div id="question-info">السؤال 1 من 20</div>
+
+    <form id="quizForm">
+
+        <div id="question-container"></div>
+      <br><br><br>
+
+        <button id="next-button" onclick="nextQuestion()" type="button">التالي</button>
+
+    </form>
+
+</div>
+
+<div class="hidden" id="result"></div>
+
+<div id="popup" class="hidden">
+
+    <p>
+اكتب كلمة المرور صح    </p>
+
+    <button onclick="closePopup()">إغلاق</button>
+
+</div>
+
+<script>
+
+     const questions = [
+
+{
+  "question": "فى أى سورة ورد قوله تعالى ﴿هُوَ يُحْيِي وَيُمِيتُ وَإِلَيْهِ تُرْجَعُونَ﴾",
+  "options": ["سورة يونس", "سورة الحجر", "سورة الأنعام"],
+  "answer": "سورة يونس"
+},
+{
+  "question": "فى أى سورة ورد قوله تعالى ﴿اللَّهُ الَّذِي رَفَعَ السَّمَاوَاتِ بِغَيْرِ عَمَدٍ تَرَوْنَهَا ثُمَّ اسْتَوَى عَلَى الْعَرْشِ وَسَخَّرَ الشَّمْسَ وَالْقَمَرَ كُلٌّ يَجْرِي لِأَجَلٍ مُسَمًّى يُدَبِّرُ الْأَمْرَ يُفَصِّلُ الْآيَاتِ لَعَلَّكُمْ بِلِقَاءِ﴾",
+  "options": ["سورة التحريم", "سورة الرعد", "سورة فاطر"],
+  "answer": "سورة الرعد"
+},
+{
+  "question": "فى أى سورة ورد قوله تعالى ﴿وَلَمَّا رَجَعَ مُوسَى إِلَى قَوْمِهِ غَضْبَانَ أَسِفًا قَالَ بِئْسَمَا خَلَفْتُمُونِي مِنْ بَعْدِي أَعَجِلْتُمْ أَمْرَ رَبِّكُمْ وَأَلْقَى الْأَلْوَاحَ وَأَخَذَ بِرَأْسِ أَخِيهِ يَجُرُّهُ إِلَيْهِ قَالَ ابْنَ ......﴾",
+  "options": ["سورة الأنبياء", "سورة الحج", "سورة الأعراف"],
+  "answer": "سورة الأعراف"
+},
+{
+  "question": "فى أى سورة ورد قوله تعالى ﴿وَلَمَّا سَكَتَ عَنْ مُوسَى الْغَضَبُ أَخَذَ الْأَلْوَاحَ وَفِي نُسْخَتِهَا هُدًى وَرَحْمَةٌ لِلَّذِينَ هُمْ لِرَبِّهِمْ يَرْهَبُونَ﴾",
+  "options": ["سورة الأعراف", "سورة هود", "سورة النحل"],
+  "answer": "سورة الأعراف"
+},
+{
+  "question": "فى أى سورة ورد قوله تعالى ﴿هَلْ يَنْظُرُونَ إِلَّا أَنْ يَأْتِيَهُمُ اللَّهُ فِي ظُلَلٍ مِنَ الْغَمَامِ وَالْمَلَائِكَةُ وَقُضِيَ الْأَمْرُ وَإِلَى اللَّهِ تُرْجَعُ الْأُمُورُ﴾",
+  "options": ["سورة البقرة", "سورة النساء", "سورة التوبة"],
+  "answer": "سورة البقرة"
+},
+{
+  "question": "فى أى سورة ورد قوله تعالى ﴿قُلْ إِنَّمَا الْعِلْمُ عِنْدَ اللَّهِ وَإِنَّمَا أَنَا نَذِيرٌ مُبِينٌ﴾",
+  "options": ["سورة القلم", "سورة الجن", "سورة الملك"],
+  "answer": "سورة الملك"
+},
+{
+  "question": "فى أى سورة ورد قوله تعالى ﴿وَإِذَا قِيلَ لَهُمْ تَعَالَوْا يَسْتَغْفِرْ لَكُمْ رَسُولُ اللَّهِ لَوَّوْا رُؤُوسَهُمْ وَرَأَيْتَهُمْ يَصُدُّونَ وَهُمْ مُسْتَكْبِرُونَ﴾",
+  "options": ["سورة المنافقون", "سورة المجادلة", "سورة التغابن"],
+  "answer": "سورة المنافقون"
+},
+{
+  "question": "فى أى سورة ورد قوله تعالى ﴿ذَلِكَ أَمْرُ اللَّهِ أَنزَلَهُ إِلَيْكُمْ ۚ وَمَن يَتَّقِ اللَّهَ يُكَفِّرْ عَنْهُ سَيِّئَاتِهِ وَيُعْظِمْ لَهُ أَجْرًا﴾",
+  "options": ["سورة الطلاق", "سورة الحشر", "سورة المعارج"],
+  "answer": "سورة الطلاق"
+},
+{
+  "question": "فى أى سورة ورد قوله تعالى ﴿قَالُوا تَاللَّهِ إِنَّكَ لَفِي ضَلَالِكَ الْقَدِيمِ﴾",
+  "options": ["سورة النحل", "سورة يونس", "سورة يوسف"],
+  "answer": "سورة يوسف"
+},
+{
+  "question": "فى أى سورة ورد قوله تعالى ﴿أَلَمْ تَرَ أَنَّهُمْ فِي كُلِّ وَادٍ يَهِيمُونَ﴾",
+  "options": ["سورة البقرة", "سورة الشعراء", "سورة النمل"],
+  "answer": "سورة الشعراء"
+},
+{
+  "question": "فى أى سورة ورد قوله تعالى ﴿وَيَقُولُ الَّذِينَ آمَنُوا أَهَؤُلَاءِ الَّذِينَ أَقْسَمُوا بِاللَّهِ جَهْدَ أَيْمَانِهِمْ إِنَّهُمْ لَمَعَكُمْ ۚ حَبِطَتْ أَعْمَالُهُمْ فَأَصْبَحُوا خَاسِرِينَ﴾",
+  "options": ["سورة النساء", "سورة المائدة", "سورة النمل"],
+  "answer": "سورة المائدة"
+},
+{
+  "question": "فى أى سورة ورد قوله تعالى ﴿وَهُوَ الَّذِي أَنزَلَ مِنَ السَّمَاءِ مَاءً فَأَخْرَجْنَا بِهِ نَبَاتَ كُلِّ شَيْءٍ فَأَخْرَجْنَا مِنْهُ خَضِرًا نُّخْرِجُ مِنْهُ حَبًّا مُّتَرَاكِبًا وَمِنَ النَّخْلِ مِن طَلْعِهَا قِنْوَانٌ دَانِيَةٌ وَجَنَّاتٍ مِّن .﴾",
+  "options": ["سورة الحجر", "سورة الأنعام", "سورة الكهف"],
+  "answer": "سورة الأنعام"
+},
+{
+  "question": "فى أى سورة ورد قوله تعالى ﴿مَّا تَسْبِقُ مِنْ أُمَّةٍ أَجَلَهَا وَمَا يَسْتَأْخِرُونَ﴾",
+  "options": ["سورة الحجر", "سورة المؤمنون", "جميع ما سبق"],
+  "answer": "جميع ما سبق"
+},
+{
+  "question": "فى أى سورة ورد قوله تعالى ﴿يَوْمَ تَرَوْنَهَا تَذْهَلُ كُلُّ مُرْضِعَةٍ عَمَّا أَرْضَعَتْ وَتَضَعُ كُلُّ ذَاتِ حَمْلٍ حَمْلَهَا وَتَرَى النَّاسَ سُكَارَىٰ وَمَا هُم بِسُكَارَىٰ وَلَكِنَّ عَذَابَ اللَّهِ شَدِيدٌ﴾",
+  "options": ["سورة الحج", "سورة الرحمن", "سورة يس"],
+  "answer": "سورة الحج"
+},
+{
+  "question": "فى أى سورة ورد قوله تعالى ﴿وَقَالُوا لَوْلَا أُنزِلَ عَلَيْهِ مَلَكٌ ۖ وَلَوْ أَنزَلْنَا مَلَكًا لَّقُضِيَ الْأَمْرُ ثُمَّ لَا يُنظَرُونَ﴾",
+  "options": ["سورة البقرة", "سورة الأنعام", "سورة الإسراء"],
+  "answer": "سورة الأنعام"
+},
+{
+  "question": "فى أى سورة ورد قوله تعالى ﴿وَمَا ذَرَأَ لَكُمْ فِي الْأَرْضِ مُخْتَلِفًا أَلْوَانُهُ إِنَّ فِي ذَلِكَ لَآيَةً لِقَوْمٍ يَذَّكَّرُونَ﴾",
+  "options": ["سورة النحل", "سورة النمل", "سورة آل عمران"],
+  "answer": "سورة النحل"
+}
+        
+
+
+]
+
+      
+  
+    let currentQuestion = 0;
+
+    let score = 0;
+
+    let timer;
+
+    let timeLeft;
+
+    let userAnswers = [];
+
+ 
+
+    function closePopup() {
+
+        const popup = document.getElementById("popup");
+
+        popup.style.display = "none";
+
+    }
+
+    function showPopup() {
+
+    const popup = document.getElementById("popup");
+
+    popup.style.display = "block";
+
+}
+
+  function checkPassword() {
+    const passwordInput = document.getElementById("password").value;
+    const durationInput = parseInt(document.getElementById("duration").value) || 10;
+    const questionCountInput = parseInt(document.getElementById("questionCount").value) || questions.length; // استرجاع عدد الأسئلة المحدد
+
+    timeLeft = durationInput * 60;
+
+    if (passwordInput === "56") {
+        document.getElementById("login-container").classList.add("hidden");
+        document.getElementById("quiz").classList.remove("hidden");
+        document.getElementById("result").classList.add("hidden");
+
+        // خلط الأسئلة وتحديد العدد المطلوب
+        const shuffledQuestions = [...questions].sort(() => Math.random() - 0.5).slice(0, questionCountInput);
+        questions.length = 0;
+        questions.push(...shuffledQuestions);
+
+        loadQuestion();
+        startTimer();
+    } else {
+        showPopup(); // عرض النافذة المنبثقة في حالة كلمة مرور خاطئة
+    }
+}
+    function loadQuestion() {
+
+        const questionContainer = document.getElementById("question-container");
+
+      questionContainer.innerHTML = `
+    <h2>${questions[currentQuestion].question}</h2>
+    ${questions[currentQuestion].options.map((option) => `
+        <label>
+            <input type="radio" name="option" value="${option}">
+            ${option === questions[currentQuestion].answer ? option : option}  <!-- تم إزالة الفئة .correct هنا -->
+        </label><br>
+    `).join('')}
+`;
+
+        document.getElementById("question-info").textContent = `السؤال ${currentQuestion + 1} من ${questions.length}`;
+
+    }
+
+    function nextQuestion() {
+
+        const selectedOption = document.querySelector('input[name="option"]:checked');
+
+        if (selectedOption) {
+
+            const answer = selectedOption.value;
+
+            userAnswers[currentQuestion] = answer;
+
+            if (answer === questions[currentQuestion].answer) {
+
+                score++;
+
+            }
+
+            currentQuestion++;
+
+            if (currentQuestion < questions.length) {
+
+                loadQuestion();
+
+            } else {
+
+                showResult();
+
+            }
+
+        } else {
+
+            alert("يرجى اختيار إجابة.");
+
+        }
+
+    }
+
+    function showResult() {
+
+        clearInterval(timer);
+
+        const resultDiv = document.getElementById("result");
+
+        resultDiv.innerHTML = `<h2>نتيجتك: ${score} من ${questions.length}</h2>`;
+
+        const incorrectAnswers = [];
+
+        const correctAnswers = [];
+
+        const timeoutQuestions = [];
+
+        questions.forEach((q, index) => {
+
+            const userAnswer = userAnswers[index];
+
+            if (userAnswer === undefined) {
+
+                timeoutQuestions.push(q.question);
+
+            } else if (userAnswer === q.answer) {
+
+                correctAnswers.push({ question: q.question, userAnswer: userAnswer });
+
+            } else {
+
+                incorrectAnswers.push({ question: q.question, correctAnswer: q.answer, userAnswer: userAnswer });
+
+            }
+
+        });
+
+        if (correctAnswers.length) {
+
+            resultDiv.innerHTML += `<h3>الإجابات الصحيحة:</h3><ul>${correctAnswers.map(item => `<li style="color: black;">${item.question} - إجابتك: <span style="color: green;">${item.userAnswer}</span></li>`).join('')}</ul>`;
+
+        }
+
+        if (incorrectAnswers.length) {
+
+            resultDiv.innerHTML += `<h3>الإجابات الخاطئة:</h3><ul>${incorrectAnswers.map(item => `<li style="color: black;">${item.question} - إجابتك: <span style="color: red;">${item.userAnswer}</span> - <span style="color: green;">الإجابة الصحيحة: ${item.correctAnswer}</span></li>`).join('')}</ul>`;
+
+        }
+
+        if (timeoutQuestions.length) {
+
+            resultDiv.innerHTML += `<h3>الأسئلة التي لم تجب عليها بسبب انتهاء الوقت:</h3><p>${timeoutQuestions.join(', ')}</p>`;
+
+        }
+
+        resultDiv.classList.remove("hidden");
+
+        document.getElementById("quiz").classList.add("hidden");
+
+    }
+
+    function startTimer() {
+
+        timer = setInterval(() => {
+
+            timeLeft--;
+
+            const minutes = Math.floor(timeLeft / 60);
+
+            const seconds = timeLeft % 60;
+
+            document.getElementById("timer").textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+
+            if (timeLeft <= 0) {
+
+                clearInterval(timer);
+
+                showResult();
+
+            }
+
+        }, 1000);
+
+    }
+
+    // إضافة مستمع حدث "Enter" هنا
+
+    document.getElementById("quizForm").addEventListener("keypress", function(event) {
+
+        if (event.key === "Enter") {
+
+            event.preventDefault(); // لمنع السلوك الافتراضي
+
+            nextQuestion(); // الانتقال للسؤال التالي
+
+        }
+
+    });
+
+</script>
+
+</body>
+
+</html>
